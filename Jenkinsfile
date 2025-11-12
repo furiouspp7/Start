@@ -5,7 +5,6 @@ pipeline {
     
     environment {
         DEPLOY_PATH = '/var/www/html'
-        GIT_REPO = 'https://github.com/furiouspp7/Start.git'
         GIT_BRANCH = 'main'
     }
     
@@ -19,9 +18,13 @@ pipeline {
                     git config --global --add safe.directory ${DEPLOY_PATH}
                     
                     echo "Current: \$(git log -1 --oneline)"
+                    
+                    # Discard any local changes and force update
                     git fetch origin
                     git checkout ${GIT_BRANCH}
+                    git reset --hard origin/${GIT_BRANCH}
                     git pull origin ${GIT_BRANCH}
+                    
                     echo "✅ Updated to: \$(git log -1 --oneline)"
                 """
             }
